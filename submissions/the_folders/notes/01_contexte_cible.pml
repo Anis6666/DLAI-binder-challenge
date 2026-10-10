@@ -1,43 +1,61 @@
 # =====================================================================
 # 01_contexte_cible.pml
 # Inventaire structural de la microcystine-LR (PDB 1LCM)
-# Objectif : établir le contexte factuel avant tout choix de face.
-# Equipe : <the folders>   Auteur : Anis   Date : 2026-10-10
-# Usage : dans PyMOL -> @/chemin/vers/01_contexte_cible.pml
+# Equipe : <nom-equipe>   Auteur : Anis   Date : 2026-10-10
+# IMPORTANT : en .pml, un commentaire doit occuper toute sa ligne.
 # =====================================================================
 
 reinitialize
-
-# --- Chargement ------------------------------------------------------
 fetch 1lcm, async=0
 
-# --- Definition des 7 residus ----------------------------------------
-# Codes PDB observes dans le visualiseur de sequence de 1LCM
-select dala,      resn DAL        # 1  D-Alanine            conserve
-select var_leu,   resn LEU        # 2  Leucine              VARIABLE
-select measp,     resn ACB        # 3  D-MeAsp              conserve, COO-
-select var_arg,   resn ARG        # 4  Arginine             VARIABLE
-select adda,      resn 1ZN        # 5  Adda                 conserve, hydrophobe
-select dglu,      resn FGA        # 6  D-Glu                conserve, COO-
-select mdha,      resn DAM        # 7  Mdha                 conserve, ELECTROPHILE
+# ---------------------------------------------------------------------
+# Definition des 7 residus
+# 1 DAL = D-Alanine        conserve, neutre
+# 2 LEU = Leucine          VARIABLE
+# 3 ACB = D-MeAsp          conserve, carboxylate
+# 4 ARG = Arginine         VARIABLE
+# 5 1ZN = Adda             conserve, hydrophobe
+# 6 FGA = D-Glu            conserve, carboxylate
+# 7 DAM = Mdha             conserve, ELECTROPHILE
+# ---------------------------------------------------------------------
+
+select dala,    resn DAL
+select var_leu, resn LEU
+select measp,   resn ACB
+select var_arg, resn ARG
+select adda,    resn 1ZN
+select dglu,    resn FGA
+select mdha,    resn DAM
 
 select variables, resn LEU+ARG
 select conserve,  resn DAL+ACB+1ZN+FGA+DAM
 select carboxyl,  resn ACB+FGA
 
-# --- Mise en forme ---------------------------------------------------
+# ---------------------------------------------------------------------
+# Mise en forme
+# ---------------------------------------------------------------------
+
 hide everything
 show sticks
 hide everything, hydro
 set stick_radius, 0.18
-color grey70, 1lcm
 
-color orange, adda
-color red,    dglu
-color salmon, measp
-color yellow, mdha
-color marine, variables
-color white,  dala
+# Base : tous les carbones en gris
+color grey60, elem C
+
+# Carbones colores par residu
+color orange, adda    and elem C
+color red,    dglu    and elem C
+color salmon, measp   and elem C
+color yellow, mdha    and elem C
+color marine, var_leu and elem C
+color purple, var_arg and elem C
+color white,  dala    and elem C
+
+# Heteroatomes : code couleur conventionnel conserve
+color firebrick, elem O
+color skyblue,   elem N
+color yellow,    elem S
 
 bg_color white
 set ray_opaque_background, 1
