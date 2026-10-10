@@ -97,3 +97,6 @@ print("Molecule entiere : %.0f" % cmd.get_area("1lcm"))
 print("Adda             : %.0f" % cmd.get_area("adda"))
 print("Carboxylates     : %.0f" % cmd.get_area("carboxyl"))
 print("Positions var.   : %.0f" % cmd.get_area("variables"))
+
+
+print("=== SCRIPT TERMINE ===")
