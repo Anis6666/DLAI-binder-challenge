@@ -1,7 +1,7 @@
 # =====================================================================
 # 01_contexte_cible.pml
 # Inventaire structural de la microcystine-LR (PDB 1LCM)
-# Equipe : <nom-equipe>   Auteur : Anis   Date : 2026-10-10
+# Equipe : The Folders   Auteur : Anis   Date : 2026-10-10
 # IMPORTANT : en .pml, un commentaire doit occuper toute sa ligne.
 # =====================================================================
 
