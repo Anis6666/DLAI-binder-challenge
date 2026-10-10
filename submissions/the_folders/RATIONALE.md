@@ -1,4 +1,4 @@
-# RATIONALE — [nom de ton équipe]
+# RATIONALE — The Folders
 
 ## Target face
 <!-- Quelle face de la microcystine on cible, et pourquoi.
