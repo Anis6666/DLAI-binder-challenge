@@ -1,41 +1,38 @@
-# RATIONALE — The Folders
-
-## Target face
-<!-- Quelle face de la microcystine on cible, et pourquoi.
-     À trancher semaine du 20 octobre. Options :
-     (a) face conservée : Adda + D-Glu + squelette de l'anneau
-         → détection large des microcystines, probable réaction croisée nodularine
-         → cohérent avec la valeur guide OMS écrite en "microcystine-LR totale"
-     (b) positions variables (les 2 résidus L)
-         → résolution par congénère, mais on rate les blooms d'autres producteurs
-     DÉCISION : 
-     DATE : 
-     JUSTIFICATION : -->
+<!-- Which face of microcystin we target, and why.
+     To be decided the week of October 20. Options:
+     (a) conserved face: Adda + D-Glu + ring backbone
+         → broad detection of microcystins, likely cross-reactivity with nodularin
+         → consistent with the WHO guideline value written as "total microcystin-LR"
+     (b) variable positions (the 2 L residues)
+         → congener-level resolution, but we miss blooms from other producers
+     DECISION:
+     DATE:
+     JUSTIFICATION: -->
 
 ## Approach
-<!-- Pipeline retenu et pourquoi. Inclure ce qu'on a essayé qui n'a PAS marché.
-     JOURNAL DE BORD (à remplir à chaque séance) :
+<!-- Chosen pipeline and why. Include what we tried that did NOT work.
+     LOGBOOK (to be filled in at each session):
      - 2026-10-__ : -->
 
 ## Filtering
-<!-- SEUILS ÉCRITS AVANT D'AVOIR VU LES RÉSULTATS — c'est le point noté.
-     Métrique | Seuil | Date fixée | Raison du seuil
-     ---------|-------|------------|---------------- -->
+<!-- THRESHOLDS WRITTEN BEFORE SEEING THE RESULTS — this is the graded point.
+     Metric | Threshold | Date set | Reason for the threshold
+     -------|-----------|----------|------------------------- -->
 
 ## The three
-<!-- Les trois designs, classés 1-2-3, avec un argument STRUCTURAL pour chacun.
-     Pas "meilleur ipTM" — mais "cette poche enterre complètement Adda, 
-     et ces résidus contactent le D-Glu". -->
+<!-- The three designs, ranked 1-2-3, with a STRUCTURAL argument for each.
+     Not "best ipTM" — but "this pocket completely buries Adda,
+     and these residues contact the D-Glu". -->
 
 ## What would prove us wrong
-<!-- Quel résultat expérimental montrerait que notre raisonnement était faux.
-     À écrire AVANT d'avoir la moindre donnée. -->
+<!-- Which experimental result would show that our reasoning was wrong.
+     To be written BEFORE we have any data. -->
 
 ---
-## Contraintes dures du brief — vérification finale
-- [ ] Poche enfouie, shape complementarity et buried SASA reportées
-- [ ] Aucune cystéine près du ligand (Mdha électrophile → pas de piège covalent)
-- [ ] Stable et soluble dans E. coli, pas de ponts disulfure
-- [ ] Un site libre pour la sortie de signal / split
-- [ ] Séquences sans tag, sans X, sans résidu non standard
-- [ ] 500–800 mots dans la version finale
+## Hard constraints from the brief — final check
+- [ ] Buried pocket, shape complementarity and buried SASA reported
+- [ ] No cysteine near the ligand (electrophilic Mdha → no covalent trap)
+- [ ] Stable and soluble in E. coli, no disulfide bonds
+- [ ] One free site for the signal output / split
+- [ ] Sequences with no tag, no X, no non-standard residue
+- [ ] 500–800 words in the final version
