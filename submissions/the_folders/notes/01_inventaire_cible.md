@@ -66,21 +66,6 @@ non standards affichés par leur code PDB à 3 caractères.
 
 ---
 
-## Observations visuelles
-
-*(à remplir en regardant `figures/01` à `figures/05`)*
-
-1. Adda est-elle visible depuis le même côté que les carboxylates ?
-   → ___
-2. Les deux positions variables sont-elles groupées ou opposées ?
-   → opposées
-3. Position du Mdha par rapport à Adda :
-   → elle est opposée à Adda
-4. Secteur de surface restant libre (pour le futur rapporteur de signal) :
-   → ___
-
----
-
 ## Contraintes du brief à garder en vue
 
 - Poche enfouie et complémentaire ; reporter shape complementarity et buried SASA
