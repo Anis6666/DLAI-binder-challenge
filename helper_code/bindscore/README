@@ -1,1 +1,2 @@
 # Taken from https://github.com/BogdanFilipchuk/BindScore, Bindscore helps you count the interactions between two proteins.
+# Only change InteractionAnalysis.py, and place the other files in the same folder for it to count properly.
