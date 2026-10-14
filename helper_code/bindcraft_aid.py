@@ -2,6 +2,9 @@ import glob
 import csv
 from datetime import datetime
 
+# THIS CODE IS TO ASSESS HOW YOUR BINDCRAFT CONFIGS ARE PERFORMING
+# Run this code in the same folder where you have your log files. It will count how many trajectories it produces and how many of them are successful. It stores them in a .csv file.
+
 # CSV filename with date and time
 timestamp = datetime.now().strftime("%d-%m-%y-%Hh%M")
 csv_file = f"bindcraft_summary_{timestamp}.csv"
