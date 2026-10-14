@@ -29,6 +29,8 @@ The workflow requires:
 - **Python:** Used to execute the extraction and analysis workflow.
 - **Interaction analysis modules:** The custom Python modules `PDBFetcher`, `ProteinParser`, and `InteractionFinder`.
 
+The majority of the code is from https://github.com/BogdanFilipchuk/BindScore
+
 The following imports must be available:
 
 ```python
