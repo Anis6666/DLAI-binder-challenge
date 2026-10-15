@@ -14,9 +14,6 @@ Content overview:
 - [Setup Guide](#setup-guide)
   - [1. Setup Tools on Your Machine](#1-setup-tools-on-your-machine)
   - [2. Login to the Cluster](#2-login-to-the-cluster)
-  - [3. Credentials](#3-ldap-credentials)
-  - [4. (Optional) Weights and biases, HuggingFace, Claude and Codex](#4-optional-weights-and-biases-huggingface-claude-and-codex)
-  - [5. (Optional) Symlinks](#5-optional-symlinks)
 - [Launching jobs](#launching-jobs)
 - [Using VS Code](#using-vs-code)
 
@@ -100,22 +97,39 @@ You should see the RCP cluster nodes listed.
 
 Jobs can be started interactively with the following command:
 ```bash
-runai submit --name JOB_NAME -i registry.rcp.epfl.ch/dlai-bindcraft/bindcraft:latest -g 1 --existing-pvc claimname=make-dlai-scratch,path=/scratch --interactive --attach
+runai submit --name JOB_NAME \
+  -i registry.rcp.epfl.ch/dlai-bindcraft/bindcraft:latest \
+  -g 1 --existing-pvc claimname=make-dlai-scratch,path=/scratch \
+  --interactive --attach
 ```
 
 Once inside the container you can activate the conda environment and start a bindcraft job:
 ```bash
 conda activate BindCraft
 ln -s /scratch/data/params/ .
-python -u ./bindcraft.py --settings '/scratch/{YOUR_GASPARD}/path/to/target.json' --filters './settings_filters/default_filters.json' --advanced './settings_advanced/default_4stage_multimer.json'
+python -u ./bindcraft.py \
+  --settings '/scratch/{YOUR_GASPARD}/path/to/target.json' \
+  --filters './settings_filters/default_filters.json' \
+  --advanced './settings_advanced/default_4stage_multimer.json'
 ```
+
+Make sure to replace the settings path with the path to your `target.json` file. 
 
 ### Background
 
 If you want jobs to run in the background you can run with:
 ```bash
-runai submit --name JOB_NAME -i registry.rcp.epfl.ch/dlai-bindcraft/bindcraft:latest -g 1 --existing-pvc claimname=make-dlai-scratch,path=/scratch -- conda activate BindCraft && ln -s /scratch/data/params/ . && python -u ./bindcraft.py --settings '/scratch/{YOUR_GASPARD}/path/to/target.json' --filters './settings_filters/default_filters.json' --advanced './settings_advanced/default_4stage_multimer.json'
+runai submit --name JOB_NAME -i registry.rcp.epfl.ch/dlai-bindcraft/bindcraft:latest \
+  -g 1 --existing-pvc claimname=make-dlai-scratch,path=/scratch -- \
+  conda activate BindCraft && \
+  ln -s /scratch/data/params/ . && \
+  python -u ./bindcraft.py \
+    --settings '/scratch/{YOUR_GASPARD}/path/to/target.json' \
+    --filters './settings_filters/default_filters.json' \
+    --advanced './settings_advanced/default_4stage_multimer.json'
 ```
+
+Make sure to replace the settings path with the path to your `target.json` file. 
 
 ### Job management
 
