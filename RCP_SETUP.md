@@ -136,7 +136,7 @@ Make sure to replace the settings path with the path to your `target.json` file.
 Open a terminal and type:
 
 ```bash
-ssh <gaspar-username>@jumphost.rcp.epfl.ch
+ssh {YOUR_GASPARD}@jumphost.rcp.epfl.ch
 ```
 
 The first time, you will be asked to confirm the host's fingerprint. Type yes and press Enter. Then enter your GASPAR password. Nothing appears on the screen while you type it. This is normal: type it and press Enter. Once you are connected, check where you are:
@@ -147,7 +147,7 @@ pwd
 
 You should see:
 
-/home/<gaspar-username>
+/home/{YOUR_GASPARD}
 
 This is your personal folder. To list what is in it:
 
@@ -170,7 +170,7 @@ Choose Connect to Host..., then + Add New SSH Host...
 Type:
 
 ```bash
-   ssh <gaspar-username>@jumphost.rcp.epfl.ch
+   ssh {YOUR_GASPARD}@jumphost.rcp.epfl.ch
 ```
 
 Save it to the suggested SSH config file.
