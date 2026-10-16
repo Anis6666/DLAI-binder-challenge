@@ -189,13 +189,13 @@ Run these from your own computer, not from inside the jumphost.
 Upload a file:
 
 ```bash
-scp my_file.pdb <gaspar-username>@jumphost.rcp.epfl.ch:/home/<gaspar-username>/
+scp my_file.pdb {YOUR_GASPARD}@jumphost.rcp.epfl.ch:/home/<gaspar-username>/
 ```
 
 Download a file:
 
 ```bash
-scp <gaspar-username>@jumphost.rcp.epfl.ch:/home/<gaspar-username>/results.csv .
+scp {YOUR_GASPARD}@jumphost.rcp.epfl.ch:/home/<gaspar-username>/results.csv .
 ```
 
 The . at the end means "into the current folder on my computer".
