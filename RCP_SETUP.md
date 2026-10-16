@@ -170,7 +170,7 @@ Choose Connect to Host..., then + Add New SSH Host...
 Type:
 
 ```bash
-   ssh {YOUR_GASPARD}@jumphost.rcp.epfl.ch
+ssh {YOUR_GASPARD}@jumphost.rcp.epfl.ch
 ```
 
 Save it to the suggested SSH config file.
