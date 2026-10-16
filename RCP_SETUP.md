@@ -109,6 +109,7 @@ runai submit --name JOB_NAME \
 Once inside the container you can activate the conda environment and start a bindcraft job:
 ```bash
 conda activate BindCraft
+rm -rf params
 ln -s /scratch/data/params/ .
 python -u ./bindcraft.py \
   --settings '/scratch/{YOUR_GASPARD}/path/to/target.json' \
