@@ -157,6 +157,8 @@ ls -la
 
 More information will follow regarding the folder architecture, especially for Binder Challengers!
 
+### Using jumphost with VS Code
+
 If you are comfortable with the terminal, you can work directly in your space on the cluster. VS Code makes it easier to upload, download and visualize your files.
 
 - One-time setup
@@ -180,7 +182,7 @@ Choose Connect to Host... and select jumphost.rcp.epfl.ch from the list. Do not 
 Enter your GASPAR password when asked.
 Choose Open Folder to browse your files on the cluster. You can drag and drop files in and out of the file panel. It is easy to visualise your .pdb files using ProteinViewer extension.
 
-- Copy files without VS Code (optional)
+### Copy files without VS Code (optional)
 
 Run these from your own computer, not from inside the jumphost.
 
