@@ -229,6 +229,6 @@ It will be very beneficial to learn these commands and some more to be comfortab
 
 This guide builds upon https://github.com/LTS4/rcp-lts4-guidelines/blob/update-from-rcp/README.md
 
-Special thanks to Noa Emien Etté for this guide.
+Special thanks to Noa Emien Etté for this guide and Stanislavs Dubrovskis for his help.
 
 If you encounter any problems or have some questions regarding how to use the cluster, you can always contact Tuna Karasu.
