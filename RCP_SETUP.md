@@ -131,6 +131,73 @@ runai submit --name JOB_NAME -i registry.rcp.epfl.ch/dlai-bindcraft/bindcraft:la
 
 Make sure to replace the settings path with the path to your `target.json` file. 
 
+### Using jumphost
+
+Open a terminal and type:
+
+```bash
+ssh <gaspar-username>@jumphost.rcp.epfl.ch
+```
+
+The first time, you will be asked to confirm the host's fingerprint. Type yes and press Enter. Then enter your GASPAR password. Nothing appears on the screen while you type it. This is normal: type it and press Enter. Once you are connected, check where you are:
+
+```bash
+pwd
+```
+
+You should see:
+
+/home/<gaspar-username>
+
+This is your personal folder. To list what is in it:
+
+```bash
+ls -la
+```
+
+More information will follow regarding the folder architecture, especially for Binder Challengers!
+
+If you are comfortable with the terminal, you can work directly in your space on the cluster. VS Code makes it easier to upload, download and visualize your files.
+
+- One-time setup
+
+Install VS Code if you don't have it.
+In VS Code, open the Extensions panel and install Remote - SSH.
+Open a new VS Code window and click Connect to...
+Choose Connect to Host..., then + Add New SSH Host...
+Type:
+
+```bash
+   ssh <gaspar-username>@jumphost.rcp.epfl.ch
+```
+
+Save it to the suggested SSH config file.
+
+- Each time you connect
+
+Open a new VS Code window and click Connect to....
+Choose Connect to Host... and select jumphost.rcp.epfl.ch from the list. Do not choose + Add New SSH Host... again.
+Enter your GASPAR password when asked.
+Choose Open Folder to browse your files on the cluster. You can drag and drop files in and out of the file panel. It is easy to visualise your .pdb files using ProteinViewer extension.
+
+- Copy files without VS Code (optional)
+
+Run these from your own computer, not from inside the jumphost.
+
+Upload a file:
+
+```bash
+scp my_file.pdb <gaspar-username>@jumphost.rcp.epfl.ch:/home/<gaspar-username>/
+```
+
+Download a file:
+
+```bash
+scp <gaspar-username>@jumphost.rcp.epfl.ch:/home/<gaspar-username>/results.csv .
+```
+
+The . at the end means "into the current folder on my computer".
+
 ### Job management
 
 ```bash
@@ -140,6 +207,17 @@ runai logs <name>
 runai logs <name> --pod <name>-0-<n>   # specific retry pod
 runai delete job <name>
 ```
+
+### Basic commands
+
+- pwd	Shows the folder you are in
+- ls	Lists the files in the current folder
+- cd <folder>	Moves into a folder
+- cd ..	Goes back up one folder
+- mkdir <name>	Creates a new folder
+- exit	Disconnects from the jumphost
+
+It will be very beneficial to learn these commands and some more to be comfortable while interacting with your terminal. You can find some useful resources in our drive, in "Learning_Resources___Computational" document.
 
 ## Credits
 
