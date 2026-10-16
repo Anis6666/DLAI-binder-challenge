@@ -10,6 +10,9 @@ The RCP Wiki gives you a [Quick start guide](https://wiki.rcp.epfl.ch/home/CaaS/
 > [!IMPORTANT]
 > Using the cluster creates costs. Please be mindful of the resources you use. **Do not forget to stop your jobs when not used!**
 
+> [!IMPORTANT]
+> The guide code here is for use in Linux. If you are using Windows, change the \ to `, or just write in a single line.
+
 Content overview:
 - [Setup Guide](#setup-guide)
   - [1. Setup Tools on Your Machine](#1-setup-tools-on-your-machine)
