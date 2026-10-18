@@ -1,0 +1,523 @@
+# Protein–Protein Interaction Analysis from PyMOL Sessions
+
+## Overview - InteractionAnalysis.py
+
+This workflow extracts pairs of protein chains from a PyMOL session (`.pse`), saves each pair as a separate PDB file, and analyzes the interactions between the two chains.
+
+The script is designed to analyze multiple protein complexes against a reference structure. Each extracted pair contains exactly two chains, which are assigned standardized chain IDs to ensure consistent downstream analysis.
+
+For every extracted pair, the script:
+
+1. Loads a PyMOL session containing the protein structures.
+2. Identifies the protein objects and chains present in the session.
+3. Selects one chain from each candidate protein object.
+4. Extracts the selected chains from the candidate and reference objects.
+5. Renames the extracted chains to standardized chain IDs.
+6. Saves the resulting two-chain complex as a PDB file.
+7. Identifies atom-level interactions between the two chains.
+8. Prints a summary of the detected interactions and their types.
+
+The output consists of individual PDB files and interaction summaries printed to the console.
+
+## 1. Requirements
+
+### 1.1. Software
+
+The workflow requires:
+
+- **PyMOL:** Used to load the session, extract protein chains, and export PDB files.
+- **Python:** Used to execute the extraction and analysis workflow.
+- **Interaction analysis modules:** The custom Python modules `PDBFetcher`, `ProteinParser`, and `InteractionFinder`.
+
+The majority of the code is from https://github.com/BogdanFilipchuk/BindScore
+
+The following imports must be available:
+
+```python
+from PDBFetcher import fetch_pdb_data
+from ProteinParser import Protein_Structure
+from InteractionFinder import Interaction
+```
+
+These modules must be accessible through Python's import path. Their installation requirements and dependencies must also be satisfied.
+
+The script imports PyMOL using:
+
+```python
+from pymol import cmd
+```
+
+Therefore, it must be executed in an environment where the PyMOL Python API is available, such as a suitable PyMOL Python environment or a PyMOL-integrated script runner.
+
+### 1.2. Directory structure
+
+A suggested directory structure is:
+
+```text
+protein_interaction_analysis/
+├── README.md
+├── analyze_pairs.py
+├── analysis_modules/
+│   ├── PDBFetcher.py
+│   ├── ProteinParser.py
+│   └── InteractionFinder.py
+├── input/
+│   └── session.pse
+└── output/
+    └── pair_pdbs/
+        ├── candidate_1_C_vs_reference_C.pdb
+        ├── candidate_1_C_vs_reference_D.pdb
+        └── ...
+```
+
+Additional dependencies required by the analysis modules should be installed in the same environment.
+
+The exact directory structure can differ, provided that the paths in the script are configured accordingly.
+
+## 2. Prepare the PyMOL session
+
+### 2.1. Include both proteins
+
+The PyMOL session must contain the two proteins that will be compared:
+
+- **Candidate protein:** The protein whose interaction with the reference is being evaluated.
+- **Reference protein:** The protein used as the reference for the comparison.
+
+The two proteins must be present in the same PyMOL session and accessible as separate PyMOL objects, unless the script is modified to support another arrangement. The session can include other chains that you are not concerned with.
+
+Save the session as a `.pse` file before running the script.
+
+### 2.2. Configure the reference object
+
+The current script expects the reference protein to be stored in a PyMOL object named:
+
+```python
+REFERENCE_OBJ = "reference"
+```
+
+Rename the reference object in PyMOL or change this variable to match its actual object name.
+
+The reference object must contain the chains specified in `REFERENCE_CHAINS`.
+
+For example:
+
+```python
+REFERENCE_OBJ = "reference"
+REFERENCE_CHAINS = ["C", "D"]
+```
+
+This configuration compares the candidate chain against reference chain C and reference chain D separately.
+
+### 2.3. Configure the candidate chains
+
+The script currently selects chain C from every candidate object:
+
+```python
+SOURCE_CHAIN = "C"
+```
+
+Each candidate object must therefore contain chain C. Objects without that chain are skipped automatically, and a message is printed to indicate which chains are available.
+
+If the candidate protein is stored under a different chain ID, update `SOURCE_CHAIN`.
+
+**Important:** The script treats each PyMOL object as a candidate and selects only the specified chain from that object. If an object contains multiple chains, the other chains are not included in the extracted candidate structure.
+
+### 2.4. Check the structure contents
+
+Before running the workflow, verify that:
+
+- Both proteins are present in the session.
+- The reference object has the correct name.
+- The candidate and reference chain IDs match the script configuration.
+- The proteins contain the coordinates required for analysis.
+- The candidate and reference chains are positioned appropriately if the intention is to analyze an already assembled complex.
+
+The script extracts chains from their existing coordinates. It does not align, dock, or superpose the proteins automatically.
+
+## 3. Configure the script
+
+Open `analyze_pairs.py` and update the following variables.
+
+### 3.1. Input and output paths
+
+```python
+SESSION_FILE = "path/to/session.pse"
+OUT_DIR = "path/to/output/pair_pdbs"
+ANALYSIS_DIR = "path/to/analysis_modules"
+```
+
+Set these paths as follows:
+
+- `SESSION_FILE`: Path to the PyMOL session containing the candidate and reference proteins.
+- `OUT_DIR`: Directory in which the extracted two-chain PDB files will be saved.
+- `ANALYSIS_DIR`: Directory containing the interaction analysis modules.
+
+For example:
+
+```python
+SESSION_FILE = r"C:\protein_analysis\input\session.pse"
+OUT_DIR = r"C:\protein_analysis\output\pair_pdbs"
+ANALYSIS_DIR = r"C:\protein_analysis\analysis_modules"
+```
+
+The output directory is created automatically if it does not already exist.
+
+### 3.2. Interaction threshold
+
+```python
+INTERACTION_THRESHOLD = 4.0
+```
+
+This parameter specifies the maximum atom–atom distance, in Ångströms, used by the interaction analysis.
+
+For example:
+
+- `3.0 Å`: More restrictive distance cutoff.
+- `4.0 Å`: The default cutoff in this workflow.
+- `5.0 Å`: A broader distance cutoff.
+
+The cutoff determines which atom pairs are considered during the analysis. The interaction types that are subsequently reported depend on the classification rules implemented in `InteractionFinder`.
+
+A larger cutoff generally includes more atom pairs, but it does not necessarily imply stronger or more biologically relevant binding.
+
+### 3.3. Output chain IDs
+
+```python
+CHAIN_ID_1 = "Z"
+CHAIN_ID_2 = "Y"
+```
+
+Every extracted PDB is rewritten to use these two chain IDs:
+
+- Chain Z: Candidate protein.
+- Chain Y: Reference protein.
+
+Standardizing the chain IDs prevents collisions between the original chain identifiers and ensures that the interaction analysis uses consistent chain names.
+
+If you change these values, ensure that they are distinct and supported by the PDB-writing and parsing tools.
+
+### 3.4. Example complete configuration
+
+```python
+SESSION_FILE = r"C:\protein_analysis\input\session.pse"
+OUT_DIR = r"C:\protein_analysis\output\pair_pdbs"
+ANALYSIS_DIR = r"C:\protein_analysis\analysis_modules"
+
+INTERACTION_THRESHOLD = 4.0
+
+REFERENCE_OBJ = "reference"
+SOURCE_CHAIN = "C"
+REFERENCE_CHAINS = ["C", "D"]
+
+CHAIN_ID_1 = "Z"
+CHAIN_ID_2 = "Y"
+```
+
+Adjust the object names, chain IDs, and file paths to match your own session.
+
+## 4. How the workflow operates
+
+### Step 1: Load the PyMOL session
+
+The script loads the configured session:
+
+```python
+cmd.load(SESSION_FILE)
+```
+
+It then retrieves the objects present in the PyMOL session.
+
+The script assumes that the reference object already exists under the configured name.
+
+### Step 2: Identify candidate–reference pairs
+
+The script loops over all PyMOL objects:
+
+```python
+for obj in cmd.get_object_list():
+    if obj == REFERENCE_OBJ:
+        continue
+```
+
+The reference object is excluded from the candidate list.
+
+For each remaining object, the script checks whether `SOURCE_CHAIN` is present. If so, it creates one comparison for every chain listed in `REFERENCE_CHAINS`.
+
+For example, if the session contains three candidate objects named `candidate_1`, `candidate_2`, and `candidate_3`, with chain C present in each, and the reference contains chains C and D, the script generates six comparisons:
+
+```text
+candidate_1_C_vs_reference_C
+candidate_1_C_vs_reference_D
+candidate_2_C_vs_reference_C
+candidate_2_C_vs_reference_D
+candidate_3_C_vs_reference_C
+candidate_3_C_vs_reference_D
+```
+
+The total number of comparisons is:
+
+\[
+N_{\mathrm{pairs}} =
+N_{\mathrm{eligible\ candidates}}
+\times
+N_{\mathrm{reference\ chains}}
+\]
+
+Here, an eligible candidate is an object containing the configured source chain.
+
+### Step 3: Extract the chains
+
+For each comparison, the script creates temporary objects containing only the selected chains:
+
+```python
+cmd.create(tmp1, f"{obj1} and chain {ch1}")
+cmd.create(tmp2, f"{obj2} and chain {ch2}")
+```
+
+The selected chains are renamed to the standardized IDs:
+
+```python
+cmd.alter(tmp1, f"chain='{CHAIN_ID_1}'")
+cmd.alter(tmp2, f"chain='{CHAIN_ID_2}'")
+```
+
+The two chains are then combined into a single object and saved as a PDB file.
+
+The temporary objects are deleted after the PDB has been written.
+
+### Step 4: Save each pair as a PDB file
+
+Each comparison is saved using its label:
+
+```text
+candidate_1_C_vs_reference_C.pdb
+```
+
+Each output PDB is intended to contain two chains:
+
+| Chain ID | Contents |
+|---|---|
+| Z | Candidate protein chain |
+| Y | Reference protein chain |
+
+The original chain identifiers are replaced. The output filenames preserve the source object names and original chain IDs to make each comparison traceable.
+
+### Step 5: Parse the extracted structure
+
+The analysis function loads the extracted PDB through:
+
+```python
+pdb_data = fetch_pdb_data(pdb_file)
+protein = Protein_Structure(pdb_data)
+```
+
+It verifies that both expected chain IDs exist before proceeding.
+
+If either chain is missing, the function raises a `ValueError` and reports the chains available in the parsed structure.
+
+### Step 6: Identify atom-level interactions
+
+The interaction analysis is initialized with:
+
+```python
+interaction = Interaction(
+    protein,
+    chain1,
+    chain2,
+    threshold=threshold
+)
+```
+
+The script then processes the interaction records generated by `InteractionFinder`.
+
+Interactions for which `type` is `None` are excluded from the printed results.
+
+If no classified interactions remain, the script prints:
+
+```text
+No interactions found.
+```
+
+and returns an empty list.
+
+### Step 7: Print the interaction summary
+
+For every retained interaction, the script reports:
+
+- Residue name and sequence number for chain Z.
+- Atom name in chain Z.
+- Residue name and sequence number for chain Y.
+- Atom name in chain Y.
+- Interaction type.
+- Atom–atom distance in Ångströms.
+
+The output resembles:
+
+```text
+======================================================================
+INTERACTION SUMMARY
+======================================================================
+PDB:       candidate_1_C_vs_reference_C.pdb
+Threshold: 4.0 Å
+----------------------------------------------------------------------
+  1. SER45    OG     --  ASP102   OD1    |  <interaction type>   |  2.85 Å
+  2. TYR48    OH     --  GLU106   OE1    |  <interaction type>   |  3.12 Å
+======================================================================
+```
+
+The interaction types shown above are illustrative placeholders; the actual labels depend on the implementation of `InteractionFinder`.
+
+At the end, the script reports the number of interactions in each classified category.
+
+**Note:** These counts represent interaction records, not necessarily unique residue–residue contacts. Multiple atom pairs may contribute to the same residue pair or interaction category.
+
+## 5. Running the script
+
+### Option A: Run through PyMOL
+
+If your installation provides the PyMOL command-line executable with Python scripting support, execute the script using that installation.
+
+For example, in a compatible PyMOL environment:
+
+```bash
+pymol -cq analyze_pairs.py
+```
+
+The exact invocation depends on your PyMOL installation and how its Python API is configured.
+
+### Option B: Run inside an existing PyMOL session
+
+If you already have an open PyMOL session, you can execute the script from the PyMOL command line:
+
+```text
+run /path/to/analyze_pairs.py
+```
+
+Before using this approach, ensure that the script's `cmd.load(SESSION_FILE)` call is appropriate for the current session. Loading the session again may introduce duplicate objects or naming conflicts.
+
+### Expected output
+
+During execution, the script prints:
+
+1. The number and labels of candidate–reference pairs.
+2. The location of each exported PDB file.
+3. The interaction summary for each pair.
+4. The counts of classified interaction types.
+
+The PDB files are written to `OUT_DIR`.
+
+The interaction summaries are printed to the console. The current script does not save these summaries to separate text or CSV files.
+
+## 6. Interpreting the results
+
+The workflow can help compare structural contacts between candidate proteins and selected reference chains.
+
+Useful observations include:
+
+- **Number of classified interactions:** The number of atom-level records assigned an interaction type.
+- **Interaction types:** The distribution of categories reported by `InteractionFinder`.
+- **Atom–atom distances:** The geometric separation of interacting atoms.
+- **Residue involvement:** The residues that contribute to the detected contacts.
+- **Differences between reference chains:** Whether candidates exhibit different contact patterns against reference chains C and D.
+
+These measurements should be interpreted in the context of the structures and the interaction-classification rules.
+
+A larger number of contacts does not automatically indicate stronger binding. Results can depend on protein size, interface geometry, side-chain placement, structural confidence, missing atoms, protonation, and the chosen distance cutoff.
+
+The script detects and classifies structural interactions; it does not independently calculate binding affinity, establish experimental binding, or prove biological activity.
+
+## 7. Troubleshooting
+
+### Error: Analysis module not found
+
+Example:
+
+```text
+ModuleNotFoundError: No module named 'PDBFetcher'
+```
+
+Check that `ANALYSIS_DIR` points to the directory containing the modules and that the path is appended to `sys.path` before importing them.
+
+In the current script, the imports appear before:
+
+```python
+sys.path.append(ANALYSIS_DIR)
+```
+
+Consequently, this path adjustment occurs too late to help those initial imports. Move the path configuration above the imports, or add the analysis module directory to `PYTHONPATH`.
+
+### Error: PyMOL module not found
+
+Example:
+
+```text
+ModuleNotFoundError: No module named 'pymol'
+```
+
+Run the script using an environment in which PyMOL's Python API is available.
+
+A generic Python environment may not include PyMOL even if the graphical application is installed separately.
+
+### Error: Reference object not found
+
+Check that the object name in `REFERENCE_OBJ` matches the name in the loaded session exactly.
+
+Object names are not necessarily the same as the filenames from which they were loaded.
+
+### Message: Candidate object skipped
+
+Example:
+
+```text
+[skip] candidate_1 has no chain C (chains: ['A', 'B'])
+```
+
+Update `SOURCE_CHAIN` to match the candidate structure or modify the pair-generation logic if different candidates use different chain IDs.
+
+### Error: Chain Z or Y not found
+
+Inspect the exported PDB to verify that both chains were written correctly.
+
+Possible causes include an empty chain selection, an unexpected PyMOL object, or chain identifiers being altered or parsed differently during export.
+
+### No interactions found
+
+Check the following:
+
+- The two proteins are present in the extracted PDB.
+- Their coordinates place them within the selected distance cutoff.
+- The intended candidate–reference pair was extracted.
+- The parser recognizes the exported chain IDs.
+- `InteractionFinder` classifies the detected contacts into non-`None` interaction types.
+
+Remember that the script does not automatically superpose or dock the two proteins.
+
+### Existing output files
+
+The script writes PDB files using deterministic filenames. Running it again with the same labels can overwrite previously generated PDB files.
+
+Back up any results that must be preserved before rerunning the workflow.
+
+## 8. Important implementation notes
+
+Before using the results for a large-scale comparison, consider the following limitations of the current implementation:
+
+1. **Residue numbering:** The analysis function compares `residue_seq` against strings derived from integer inputs. If residue identifiers include insertion codes or nonstandard numbering, the filtering logic may need adjustment.
+2. **Residue filtering:** When `residues` is provided, the filter selects interactions whose `atom1` belongs to the selected residues in `chain1`. This assumes that the interaction records consistently place the first chain in `atom1`.
+3. **Session object types:** `cmd.get_object_list()` may include objects that are not protein structures. The current workflow does not explicitly filter object types before inspecting chains.
+4. **Structure alignment:** No structural alignment is performed. Any desired alignment must be carried out before extraction or added to the script.
+5. **Output format:** Only the extracted PDB files are saved. Interaction summaries are currently console output rather than persistent result files.
+6. **Chain-ID consistency:** The downstream analysis expects the standardized chain IDs `Z` and `Y`. These must remain consistent between extraction and interaction analysis.
+7. **Repeatability:** The script does not clear all existing PyMOL objects or validate every output file before analysis. Use a clean session and verify the exported structures if unexpected results occur.
+
+## 9. Summary
+
+To use the workflow:
+
+1. Prepare a PyMOL session containing the candidate proteins and the reference protein.
+2. Ensure that the reference is a separate PyMOL object with the expected name.
+3. Set the candidate chain, reference chains, and chain-renaming variables.
+4. Configure the input session, output directory, analysis module directory, and interaction threshold.
+5. Run the script in an environment with PyMOL and all analysis dependencies.
+6. Inspect the exported two-chain PDB files and the interaction summaries.
+7. Interpret the results as structural interaction measurements rather than direct evidence of binding affinity or experimental activity.
