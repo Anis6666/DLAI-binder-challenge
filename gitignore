@@ -1,0 +1,9 @@
+# Sessions PyMOL : binaires, lourdes, regenerees par les .pml
+*.pse
+
+# Scories macOS
+.DS_Store
+
+# Sorties de design (volumineuses) - a adapter
+outputs/
+*.trb
