@@ -1,0 +1,54 @@
+# RFD3 input for MC-LR (from 1LCM, mclr_lig.pdb, residue LIG). Atom names filled in from mclr_lig.map.tsv.
+# Atom groups based on the doc :
+#   ADDA_DISTAL   = C30,C31,C22,O7,C21,C23,C24,C25,C26,C27,C28,C29   (C8 + Me, C9, OMe O/Me, C10, phenyl)
+#   ADDA_DIENE    = C36,C35,C33,C34,C32   (C4, C5, C6 + Me, C7)
+#   ADDA_PROXIMAL = C40,C38,C39,C37   (C1, C2 + Me, C3)
+#   CARBOXY_MASP  = C10,O3,O4   (alpha-COOH of D-MeAsp3)
+#   CARBOXY_GLU   = C42,O9,O12   (alpha-COOH of D-Glu6)
+#   RING_REST     = everything else (44 atoms: ring backbone, Ala1, Leu2, Arg4, Mdha7, side chains)
+# Note: the added O12 is the carboxylate oxygen missing from 1LCM's D-Glu6 (placed geometrically).
+
+gutter_polar:            # long groove along Adda + one carboxylate contact
+  input: ./mclr_lig.pdb
+  ligand: LIG
+  length: 70-100
+  select_fixed_atoms:
+    LIG: ""              #ligand conformation not fixed
+  select_buried:
+    LIG: "C30,C31,C22,O7,C21,C23,C24,C25,C26,C27,C28,C29,C36,C35,C33,C34,C32"
+  select_partially_buried:
+    LIG: "C40,C38,C39,C37"
+  select_exposed:
+    LIG: "N1,C1,C2,C3,O1,N2,C4,C5,O2,C6,C7,C8,C9,C11,N3,C12,C13,C14,O5,N4,C15,C16,O6,C17,C18,C19,N5,C20,N6,N7,N8,O8,N9,C41,C43,C44,C45,O10,N10,C46,C47,C48,C49,O11,C10,O3,O4"
+  select_hbond_acceptor:
+    LIG: "O9,O12,O7"   # check the NA-binder example for how donor/acceptor flags are meant
+
+distal_pocket:           # distal segment buried, OMe paired, ring exposed
+  input: ./mclr_lig.pdb
+  ligand: LIG
+  length: 60-90
+  select_fixed_atoms:
+    LIG: ""
+  select_buried:
+    LIG: "C30,C31,C22,O7,C21,C23,C24,C25,C26,C27,C28,C29"
+  select_partially_buried:
+    LIG: "C36,C35,C33,C34,C32"
+  select_exposed:
+    LIG: "C40,C38,C39,C37,N1,C1,C2,C3,O1,N2,C4,C5,O2,C6,C7,C8,C9,C11,N3,C12,C13,C14,O5,N4,C15,C16,O6,C17,C18,C19,N5,C20,N6,N7,N8,O8,N9,C41,C43,C44,C45,O10,N10,C46,C47,C48,C49,O11,C42,O9,O12,C10,O3,O4"
+  select_hbond_acceptor:
+    LIG: "O7"
+
+short_gutter_two_polar:  # proximal + diene buried, distal partly exposed, both carboxylates contacted
+  input: ./mclr_lig.pdb
+  ligand: LIG
+  length: 70-100
+  select_fixed_atoms:
+    LIG: ""
+  select_buried:
+    LIG: "C40,C38,C39,C37,C36,C35,C33,C34,C32"
+  select_partially_buried:
+    LIG: "C30,C31,C22,O7,C21,C23,C24,C25,C26,C27,C28,C29"
+  select_exposed:
+    LIG: "N1,C1,C2,C3,O1,N2,C4,C5,O2,C6,C7,C8,C9,C11,N3,C12,C13,C14,O5,N4,C15,C16,O6,C17,C18,C19,N5,C20,N6,N7,N8,O8,N9,C41,C43,C44,C45,O10,N10,C46,C47,C48,C49,O11"
+  select_hbond_acceptor:
+    LIG: "O9,O12,O3,O4"
