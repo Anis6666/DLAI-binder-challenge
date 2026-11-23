@@ -1,0 +1,16 @@
+{
+  "mclr_gutter_polar": {
+    "input": "/scratch/aaakrout/mclr/mclr_unl.cif",
+    "ligand": "UNL",
+    "length": "70-100",
+    "select_buried": {
+      "A1": "C30,C31,C22,O7,C21,C23,C24,C25,C26,C27,C28,C29,C36,C35,C33,C34,C32,C37,C38,C39,C40,C42,O9,O12"
+    },
+    "select_exposed": {
+      "A1": "N1,C1,C2,C3,O1,N2,C4,C5,O2,C6,C7,C8,C9,C11,N3,C12,C13,C14,O5,N4,C15,C16,O6,C17,C18,C19,N5,C20,N6,N7,N8,O8,N9,C41,C43,C44,C45,O10,N10,C46,C47,C48,C49,O11,C10,O3,O4"
+    },
+    "select_hbond_acceptor": {
+      "A1": "O9,O12,O7"
+    }
+  }
+}
